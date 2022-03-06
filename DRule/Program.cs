@@ -3,10 +3,9 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using ConsoleApp1;
+using DRule;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
 var defaultNamespaces =
@@ -103,62 +102,3 @@ catch (Exception ex)
 goto next;
 break1:
 Console.WriteLine("end");
-namespace ConsoleApp1
-{
-    public class V : CSharpSyntaxRewriter
-    {
-        private Stack<Func<int>> result = new();
-        public override SyntaxNode? VisitBinaryExpression(BinaryExpressionSyntax node)
-        {
-            Visit(node.Left);
-            Visit(node.Right);
-            var left = result.Pop();
-            var right  = result.Pop();
-            switch (node.OperatorToken.ValueText)
-            {
-                case "+": result.Push(() => left() + right()); break;
-                case "*": result.Push(() => left() * right()); break;
-                case "-": result.Push(() => left() - right()); break;
-                case "/": result.Push(() => left() / right()); break;
-            }
-            return node;
-        }
-
-        public Func<int> Evaluator(SyntaxNode? node)
-        {
-            Visit(node);
-            return result.Pop();
-        }
-    
-        public override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
-        {
-            result.Push(() => Convert.ToInt32(node.Token.Text));
-            return base.VisitLiteralExpression(node);
-        }
-
-        public override SyntaxNode? VisitIfStatement(IfStatementSyntax node)
-        {
-            return base.VisitIfStatement(node);
-        }
-
-        public override SyntaxNode? VisitElseClause(ElseClauseSyntax node)
-        {
-            return base.VisitElseClause(node);
-        }
-
-        public override SyntaxNode? VisitParenthesizedLambdaExpression(ParenthesizedLambdaExpressionSyntax node)
-        {
-            return base.VisitParenthesizedLambdaExpression(node);
-        }
-
-        public override SyntaxNode? VisitSimpleLambdaExpression(SimpleLambdaExpressionSyntax node)
-        {
-            return base.VisitSimpleLambdaExpression(node);
-        }
-
-        public override SyntaxNode? Visit(SyntaxNode? node)
-        {
-            return base.Visit(node);
-        }
-    }
-}

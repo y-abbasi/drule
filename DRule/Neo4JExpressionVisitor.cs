@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace ConsoleApp1;
+namespace DRule;
 
 public class Neo4JExpressionVisitor : ExpressionVisitor, IExpressionVisitor
 {
@@ -290,7 +290,7 @@ public class Neo4JExpressionVisitor : ExpressionVisitor, IExpressionVisitor
         {
             //proper order of selected names provided by means of Stack structure
             var fieldName = _fieldNames.Pop();
-            var fieldInfo = type.GetField(fieldName);
+            var fieldInfo = type.GetField(fieldName); 
             object value;
             value = fieldInfo != null ? fieldInfo.GetValue(input) : type.GetProperty(fieldName).GetValue(input);
             return GetValue(value);
@@ -311,10 +311,4 @@ public class Neo4JExpressionVisitor : ExpressionVisitor, IExpressionVisitor
     {
         _queryStringBuilder.Append(text);
     }
-}
-
-public interface IExpressionVisitor
-{
-    Expression Visit(Expression node);
-    internal void AppendToResult(string text);
 }
