@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace DRule;
 
-public interface IRule
+public interface IRule<T>
 {
-    Expression<Func<Person, bool>> Filter { get; }
+    Expression<Func<T, bool>> Filter { get; }
 }
